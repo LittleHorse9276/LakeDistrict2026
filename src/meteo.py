@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "31 oct. 2026"
+EMIS = "2 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -21,6 +21,7 @@ STATIONS = {  # clé AccuWeather, nom, slug
 }
 # Libellés AccuWeather -> (français, icône)
 TR = {
+ "Cloudy with a shower in spots":("Couvert, averse locale","🌦️"),
  "Cloudy with showers":("Nuageux, averses","🌦️"),
  "Cloudy with showery rains":("Nuageux, pluies en averses","🌦️"),
  "Cloudy with occasional rain":("Nuageux, pluie par moments","🌧️"),
@@ -59,32 +60,40 @@ FC["EG"]={13:("Cloudy most of the time",54,43)}
 # HALF[(station, date, "m"|"a")] = (libellé, T °F, RealFeel °F, dir vent, vent mph, rafales mph, humidité %, pluie %, nuages %)
 # Relevé AccuWeather du 31 oct. 2026 (pages Morning 7h-13h / Afternoon 13h-19h, ?day=N avec N = date + 1)
 HALF = {
- ("NB",8,"a"):("Partly sunny",50,46,"ESE",8,20,70,1,92),
- ("CO",8,"a"):("Mostly cloudy",48,45,"ESE",8,24,78,1,90),
- ("HK",8,"a"):("Mostly cloudy",48,45,"ESE",8,24,78,1,90),
- ("SA",8,"a"):("Mostly cloudy",48,45,"ESE",8,24,78,1,90),
- ("EL",9,"m"):("Periods of rain",46,40,"ESE",9,23,88,60,100),
- ("LL",9,"m"):("Periods of rain",46,40,"ESE",9,23,88,60,100),
- ("CO",9,"m"):("Periods of rain",46,40,"ESE",9,23,88,60,100),
- ("HK",9,"a"):("Periods of rain",49,43,"ESE",8,23,81,60,100),
- ("GR",10,"m"):("Cloudy",47,43,"W",6,18,100,12,91),
- ("GR",10,"a"):("Cloudy",49,45,"WNW",8,20,93,3,92),
- ("AM",10,"a"):("Cloudy",49,45,"WNW",8,20,93,3,92),
- ("AM",11,"m"):("Mostly cloudy",45,37,"WSW",10,24,84,8,81),
- ("PA",11,"m"):("Mostly cloudy",45,37,"WSW",10,24,84,8,81),
- ("HT",11,"m"):("Mostly cloudy",44,36,"WSW",9,23,79,6,72),
- ("HT",11,"a"):("Mostly cloudy",46,39,"SW",12,25,83,11,93),
- ("DO",11,"a"):("Mostly cloudy",48,41,"SW",12,30,76,17,98),
- ("KE",11,"a"):("Mostly cloudy",51,51,"E",5,10,79,22,98),
- ("KE",12,"m"):("Cloudy with a little rain",48,46,"SE",5,12,88,55,99),
- ("RO",12,"m"):("Cloudy with a little rain",48,46,"SE",5,12,88,55,99),
- ("SE",12,"m"):("Cloudy with a little rain",48,46,"SE",5,12,88,55,99),
- ("BU",12,"m"):("Cloudy with a little rain",48,46,"SE",5,12,88,55,99),
- ("LO",12,"a"):("Cloudy",50,43,"SW",14,30,100,25,89),
- ("BR",12,"a"):("Cloudy",50,48,"SE",6,13,84,25,93),
- ("AP",13,"m"):("Cloudy with a little rain",46,42,"E",6,12,86,55,99),
- ("WA",13,"m"):("Cloudy with a little rain",47,41,"ESE",8,14,85,55,100),
- ("EG",13,"a"):("Cloudy with a little rain",50,45,"ESE",9,16,79,56,99),
+ ("NB",8,"a"):('Partly sunny',49,53,"SW",2,7,77,17,21),
+ ("CO",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
+ ("HK",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
+ ("SA",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
+ ("EL",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
+ ("LL",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
+ ("CO",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
+ ("HK",9,"a"):('Periods of rain',48,48,"S",5,12,82,60,100),
+ ("GR",10,"m"):('Partly sunny',46,42,"WNW",6,16,84,7,78),
+ ("GR",10,"a"):('Partly sunny',48,48,"W",5,17,80,25,62),
+ ("AM",10,"a"):('Partly sunny',48,48,"W",5,17,80,25,62),
+ ("AM",11,"m"):('Cloudy with a shower in spots',47,42,"SSW",7,17,87,49,98),
+ ("PA",11,"m"):('Cloudy with a shower in spots',47,42,"SSW",7,17,87,49,98),
+ ("HT",11,"m"):('Cloudy with a shower in spots',45,41,"SSW",6,17,84,49,97),
+ ("HT",11,"a"):('Cloudy',47,44,"S",6,18,83,25,93),
+ ("DO",11,"a"):('Cloudy with a little rain',47,43,"S",7,18,83,55,98),
+ ("KE",11,"a"):('Cloudy with a little rain',50,49,"E",5,10,81,55,98),
+ ("KE",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
+ ("RO",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
+ ("SE",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
+ ("BU",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
+ ("LO",12,"a"):('Partly sunny',49,46,"SE",8,18,74,25,80),
+ ("BR",12,"a"):('Partly sunny',49,49,"ESE",5,10,81,25,81),
+ ("AP",13,"m"):('Periods of rain',50,49,"SSE",5,12,85,71,81),
+ ("WA",13,"m"):('Periods of rain',50,45,"WSW",8,30,99,71,66),
+ ("EG",13,"a"):('Mostly cloudy',52,44,"WNW",16,30,80,25,55),
+}
+# Relevé AccuWeather du 2 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche) pour les jours couverts (jusqu'au 11 nov.)
+MO = {
+ (1,"14h05"):(10,9),(1,"15h20"):(10,10),(1,"15h47"):(10,10),(1,"16h19"):(10,9),
+ (2,"09h01"):(20,7),(2,"09h55"):(20,8),(2,"11h33"):(20,10),(2,"12h49"):(20,10),(2,"15h03"):(10,10),
+ (3,"09h35"):(30,9),(3,"12h22"):(40,10),(3,"13h29"):(30,10),(3,"15h50"):(30,10),(3,"16h14"):(30,9),
+ (4,"09h18"):(20,8),(4,"09h31"):(20,9),(4,"10h36"):(20,10),(4,"12h38"):(30,10),(4,"13h04"):(30,10),
+ (4,"14h03"):(30,9),(4,"15h13"):(30,10),(4,"15h33"):(30,10),(4,"16h07"):(30,10),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -117,6 +126,8 @@ CSS = """
   background:var(--paper-2);color:var(--ink-2);white-space:nowrap;text-decoration:none}
 .wx .wd{background:#E3DCC4;color:var(--ink);white-space:normal}
 .wx .wh0{background:transparent;border:1px dashed var(--paper-3);color:var(--ink-3)}
+.wx .wmo{background:transparent;border:1px solid var(--paper-3);color:var(--ink-3)}
+.wx .winc{background:#F6D9C7;color:#8A3B12;font-weight:600}
 .wx a{background:transparent;color:var(--bracken);border:1px solid var(--paper-3)}
 """
 
@@ -129,6 +140,14 @@ def day_block(n):
             '<div class="wl"><i>Chaque spot porte la prévision de la station AccuWeather la plus proche. '
             'L\'heure par heure s\'affichera à l\'heure de passage quand AccuWeather la publiera (~J−3).</i></div></div>'
            )%(EMIS,d+6,H.escape(" · ".join(st)))
+
+def mo_cell(n,hhmm,pop,tc):
+    m=MO.get((n,hhmm))
+    if not m: return ''
+    inc=abs(m[0]-pop)>30 or abs(m[1]-tc)>3
+    c='<span class="wmo">Met Office : pluie %d %% · %d°</span>'%m
+    if inc: c+='<span class="winc">⚠ incertain</span>'
+    return c
 
 def stop_line(n,hhmm,s):
     key,name,slug=STATIONS[s]; d=DATE[n]
@@ -144,8 +163,8 @@ def stop_line(n,hhmm,s):
     return ('<div class="wx" data-wx="stop"><span class="wd" title="%s">%s %s (%s)</span>'
             '<span>%d° · ressenti %d°</span><span>☔ pluie %d %%</span><span>☁️ nuages %d %%</span>'
             '<span>💧 humidité %d %%</span><span>💨 %s %d km/h · rafales %d</span>%s'
-            '<a href="%s" target="_blank" rel="noopener">%s ↗</a></div>')%(
-            H.escape(en),ic,H.escape(fr),per,F2C(t),F2C(rf),pop,cl,hu,wd,KMH(w),KMH(g),hcell,url,H.escape(name))
+            '%s<a href="%s" target="_blank" rel="noopener">%s ↗</a></div>')%(
+            H.escape(en),ic,H.escape(fr),per,F2C(t),F2C(rf),pop,cl,hu,wd,KMH(w),KMH(g),hcell,mo_cell(n,hhmm,pop,F2C(t)),url,H.escape(name))
 
 def strip(s):
     s=re.sub(r'<div class="dwx" data-wx="day">.*?</div></div>(?=<div class="dbody">)','',s,flags=re.S)
