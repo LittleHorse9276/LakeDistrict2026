@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "2 nov. 2026"
+EMIS = "3 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -21,6 +21,7 @@ STATIONS = {  # clé AccuWeather, nom, slug
 }
 # Libellés AccuWeather -> (français, icône)
 TR = {
+ "Mostly cloudy with a shower in spots":("Plutôt nuageux, averse locale","🌦️"),
  "Cloudy with a shower in spots":("Couvert, averse locale","🌦️"),
  "Cloudy with showers":("Nuageux, averses","🌦️"),
  "Cloudy with showery rains":("Nuageux, pluies en averses","🌦️"),
@@ -60,40 +61,42 @@ FC["EG"]={13:("Cloudy most of the time",54,43)}
 # HALF[(station, date, "m"|"a")] = (libellé, T °F, RealFeel °F, dir vent, vent mph, rafales mph, humidité %, pluie %, nuages %)
 # Relevé AccuWeather du 31 oct. 2026 (pages Morning 7h-13h / Afternoon 13h-19h, ?day=N avec N = date + 1)
 HALF = {
- ("NB",8,"a"):('Partly sunny',49,53,"SW",2,7,77,17,21),
- ("CO",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
- ("HK",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
- ("SA",8,"a"):('Partly sunny',47,51,"WSW",2,8,83,19,36),
- ("EL",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
- ("LL",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
- ("CO",9,"m"):('Periods of rain',46,45,"S",4,14,92,60,98),
- ("HK",9,"a"):('Periods of rain',48,48,"S",5,12,82,60,100),
- ("GR",10,"m"):('Partly sunny',46,42,"WNW",6,16,84,7,78),
- ("GR",10,"a"):('Partly sunny',48,48,"W",5,17,80,25,62),
- ("AM",10,"a"):('Partly sunny',48,48,"W",5,17,80,25,62),
- ("AM",11,"m"):('Cloudy with a shower in spots',47,42,"SSW",7,17,87,49,98),
- ("PA",11,"m"):('Cloudy with a shower in spots',47,42,"SSW",7,17,87,49,98),
- ("HT",11,"m"):('Cloudy with a shower in spots',45,41,"SSW",6,17,84,49,97),
- ("HT",11,"a"):('Cloudy',47,44,"S",6,18,83,25,93),
- ("DO",11,"a"):('Cloudy with a little rain',47,43,"S",7,18,83,55,98),
- ("KE",11,"a"):('Cloudy with a little rain',50,49,"E",5,10,81,55,98),
- ("KE",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
- ("RO",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
- ("SE",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
- ("BU",12,"m"):('Partly sunny',47,48,"ESE",5,10,85,11,68),
- ("LO",12,"a"):('Partly sunny',49,46,"SE",8,18,74,25,80),
- ("BR",12,"a"):('Partly sunny',49,49,"ESE",5,10,81,25,81),
- ("AP",13,"m"):('Periods of rain',50,49,"SSE",5,12,85,71,81),
- ("WA",13,"m"):('Periods of rain',50,45,"WSW",8,30,99,71,66),
- ("EG",13,"a"):('Mostly cloudy',52,44,"WNW",16,30,80,25,55),
+ ("NB",8,"a"):('Partly sunny',51,54,"ESE",4,7,80,15,67),
+ ("CO",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
+ ("HK",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
+ ("SA",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
+ ("EL",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
+ ("LL",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
+ ("CO",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
+ ("HK",9,"a"):('Cloudy',48,46,"ESE",6,15,69,3,100),
+ ("GR",10,"m"):('Cloudy with a little rain',47,48,"E",5,12,98,57,100),
+ ("GR",10,"a"):('Cloudy',50,51,"NE",4,8,91,25,85),
+ ("AM",10,"a"):('Cloudy',50,51,"NE",4,8,91,25,85),
+ ("AM",11,"m"):('Cloudy',47,49,"ENE",2,7,98,25,99),
+ ("PA",11,"m"):('Cloudy',47,49,"ENE",2,7,98,25,99),
+ ("HT",11,"m"):('Cloudy',45,46,"ESE",4,9,100,25,99),
+ ("HT",11,"a"):('Cloudy',47,48,"SE",2,8,100,25,100),
+ ("DO",11,"a"):('Cloudy',47,50,"S",1,7,99,25,100),
+ ("KE",11,"a"):('Cloudy',50,51,"ESE",4,9,85,25,100),
+ ("KE",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
+ ("RO",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
+ ("SE",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
+ ("BU",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
+ ("LO",12,"a"):('Cloudy',52,47,"WSW",10,22,86,25,97),
+ ("BR",12,"a"):('Cloudy with a shower in spots',52,51,"S",6,13,81,55,94),
+ ("AP",13,"m"):('Cloudy with a little rain',51,50,"SE",4,12,87,55,100),
+ ("WA",13,"m"):('Cloudy with a little rain',51,43,"SW",15,27,100,57,100),
+ ("EG",13,"a"):('Cloudy with a shower in spots',52,44,"SW",16,29,99,55,91),
 }
-# Relevé AccuWeather du 2 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche) pour les jours couverts (jusqu'au 11 nov.)
+# Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
 MO = {
- (1,"14h05"):(10,9),(1,"15h20"):(10,10),(1,"15h47"):(10,10),(1,"16h19"):(10,9),
- (2,"09h01"):(20,7),(2,"09h55"):(20,8),(2,"11h33"):(20,10),(2,"12h49"):(20,10),(2,"15h03"):(10,10),
- (3,"09h35"):(30,9),(3,"12h22"):(40,10),(3,"13h29"):(30,10),(3,"15h50"):(30,10),(3,"16h14"):(30,9),
- (4,"09h18"):(20,8),(4,"09h31"):(20,9),(4,"10h36"):(20,10),(4,"12h38"):(30,10),(4,"13h04"):(30,10),
- (4,"14h03"):(30,9),(4,"15h13"):(30,10),(4,"15h33"):(30,10),(4,"16h07"):(30,10),
+ (1,"14h05"):(10,10),(1,"15h20"):(0,10),(1,"15h47"):(0,9),(1,"16h19"):(0,9),
+ (2,"09h01"):(10,7),(2,"09h55"):(10,9),(2,"11h33"):(10,10),(2,"12h49"):(10,10),(2,"15h03"):(10,10),
+ (3,"09h35"):(30,9),(3,"12h22"):(30,10),(3,"13h29"):(30,10),(3,"15h50"):(30,9),(3,"16h14"):(30,9),
+ (4,"09h18"):(30,9),(4,"09h31"):(30,9),(4,"10h36"):(30,9),(4,"12h38"):(30,9),(4,"13h04"):(30,9),
+ (4,"14h03"):(20,9),(4,"15h13"):(20,9),(4,"15h33"):(20,9),(4,"16h07"):(20,9),
+ (5,"09h20"):(30,10),(5,"09h35"):(30,10),(5,"09h48"):(30,10),(5,"10h21"):(30,10),(5,"12h20"):(20,10),
+ (5,"12h39"):(20,10),(5,"15h25"):(20,9),(5,"16h17"):(20,9),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -145,7 +148,7 @@ def mo_cell(n,hhmm,pop,tc):
     m=MO.get((n,hhmm))
     if not m: return ''
     inc=abs(m[0]-pop)>30 or abs(m[1]-tc)>3
-    c='<span class="wmo">Met Office : pluie %d %% · %d°</span>'%m
+    c='<span class="wmo">Met Office : pluie %s %% · %d°</span>'%(('<5' if m[0]<5 else str(m[0])),m[1])
     if inc: c+='<span class="winc">⚠ incertain</span>'
     return c
 
