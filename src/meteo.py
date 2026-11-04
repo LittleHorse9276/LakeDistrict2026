@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "3 nov. 2026"
+EMIS = "4 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -21,6 +21,10 @@ STATIONS = {  # clé AccuWeather, nom, slug
 }
 # Libellés AccuWeather -> (français, icône)
 TR = {
+ "Increasing cloudiness":("Nuages en augmentation","⛅"),
+ "Mostly sunny":("Plutôt ensoleillé","🌤️"),
+ "Decreasing clouds":("Nuages en dissipation","🌤️"),
+ "Mostly cloudy with a couple of showers":("Plutôt nuageux, quelques averses","🌦️"),
  "Mostly cloudy with a shower in spots":("Plutôt nuageux, averse locale","🌦️"),
  "Cloudy with a shower in spots":("Couvert, averse locale","🌦️"),
  "Cloudy with showers":("Nuageux, averses","🌦️"),
@@ -59,44 +63,45 @@ FC["EG"]={13:("Cloudy most of the time",54,43)}
 
 
 # HALF[(station, date, "m"|"a")] = (libellé, T °F, RealFeel °F, dir vent, vent mph, rafales mph, humidité %, pluie %, nuages %)
-# Relevé AccuWeather du 31 oct. 2026 (pages Morning 7h-13h / Afternoon 13h-19h, ?day=N avec N = date + 1)
+# Relevé AccuWeather du 4 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) : Coniston J1-J2, Grasmere J3, Patterdale/Keswick J4, Keswick J5-J6 (Applethwaite seulement)
 HALF = {
- ("NB",8,"a"):('Partly sunny',51,54,"ESE",4,7,80,15,67),
- ("CO",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
- ("HK",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
- ("SA",8,"a"):('Mostly cloudy with a shower in spots',49,46,"SE",5,6,80,49,70),
- ("EL",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
- ("LL",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
- ("CO",9,"m"):('Cloudy',45,42,"SE",5,14,88,1,100),
- ("HK",9,"a"):('Cloudy',48,46,"ESE",6,15,69,3,100),
- ("GR",10,"m"):('Cloudy with a little rain',47,48,"E",5,12,98,57,100),
- ("GR",10,"a"):('Cloudy',50,51,"NE",4,8,91,25,85),
- ("AM",10,"a"):('Cloudy',50,51,"NE",4,8,91,25,85),
- ("AM",11,"m"):('Cloudy',47,49,"ENE",2,7,98,25,99),
- ("PA",11,"m"):('Cloudy',47,49,"ENE",2,7,98,25,99),
- ("HT",11,"m"):('Cloudy',45,46,"ESE",4,9,100,25,99),
- ("HT",11,"a"):('Cloudy',47,48,"SE",2,8,100,25,100),
- ("DO",11,"a"):('Cloudy',47,50,"S",1,7,99,25,100),
- ("KE",11,"a"):('Cloudy',50,51,"ESE",4,9,85,25,100),
- ("KE",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
- ("RO",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
- ("SE",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
- ("BU",12,"m"):('Cloudy with a shower in spots',50,49,"S",5,13,86,55,92),
- ("LO",12,"a"):('Cloudy',52,47,"WSW",10,22,86,25,97),
- ("BR",12,"a"):('Cloudy with a shower in spots',52,51,"S",6,13,81,55,94),
- ("AP",13,"m"):('Cloudy with a little rain',51,50,"SE",4,12,87,55,100),
- ("WA",13,"m"):('Cloudy with a little rain',51,43,"SW",15,27,100,57,100),
- ("EG",13,"a"):('Cloudy with a shower in spots',52,44,"SW",16,29,99,55,91),
+ ("NB",8,"a"):('Mostly cloudy with a couple of showers',50,47,"NE",7,9,82,60,78),
+ ("CO",8,"a"):('Cloudy with a shower in spots',49,45,"NE",7,8,83,55,95),
+ ("HK",8,"a"):('Cloudy with a shower in spots',49,45,"NE",7,8,83,55,95),
+ ("SA",8,"a"):('Cloudy with a shower in spots',49,45,"NE",7,8,83,55,95),
+ ("EL",9,"m"):('Mostly cloudy',47,45,"NE",6,8,94,2,90),
+ ("LL",9,"m"):('Mostly cloudy',47,45,"NE",6,8,94,2,90),
+ ("CO",9,"m"):('Mostly cloudy',47,45,"NE",6,8,94,2,90),
+ ("HK",9,"a"):('Mostly cloudy',48,46,"NE",6,8,93,1,89),
+ ("GR",10,"m"):('Cloudy',44,45,"NNE",5,9,89,25,100),
+ ("GR",10,"a"):('Cloudy with a little rain',48,49,"NNE",4,8,77,56,100),
+ ("AM",10,"a"):('Cloudy with a little rain',48,49,"NNE",4,8,77,56,100),
+ ("AM",11,"m"):('Decreasing clouds',44,35,"N",12,27,82,7,90),
+ ("PA",11,"m"):('Decreasing clouds',44,35,"N",12,27,82,7,90),
+ ("HT",11,"m"):('Mostly cloudy with a shower in spots',42,35,"NNW",9,22,84,49,95),
+ ("HT",11,"a"):('Decreasing clouds',45,38,"NNW",13,25,56,1,38),
+ ("DO",11,"a"):('Partly sunny',45,42,"WNW",7,22,55,0,7),
+ ("KE",11,"a"):('Mostly sunny',46,45,"S",7,14,80,0,5),
+ ("KE",12,"m"):('Mostly sunny',47,49,"ENE",5,12,81,0,13),
+ ("RO",12,"m"):('Mostly sunny',47,49,"ENE",5,12,81,0,13),
+ ("SE",12,"m"):('Mostly sunny',47,49,"ENE",5,12,81,0,13),
+ ("BU",12,"m"):('Mostly sunny',47,49,"ENE",5,12,81,0,13),
+ ("LO",12,"a"):('Mostly sunny',48,45,"WSW",7,20,46,2,11),
+ ("BR",12,"a"):('Mostly sunny',46,47,"WNW",5,13,81,2,11),
+ ("AP",13,"m"):('Increasing cloudiness',48,48,"W",5,14,85,2,33),
+ ("WA",13,"m"):('Partly sunny',49,54,"WSW",1,7,65,3,35),
+ ("EG",13,"a"):('Partly sunny',51,55,"WNW",2,8,70,2,62),
 }
 # Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
 MO = {
- (1,"14h05"):(10,10),(1,"15h20"):(0,10),(1,"15h47"):(0,9),(1,"16h19"):(0,9),
- (2,"09h01"):(10,7),(2,"09h55"):(10,9),(2,"11h33"):(10,10),(2,"12h49"):(10,10),(2,"15h03"):(10,10),
- (3,"09h35"):(30,9),(3,"12h22"):(30,10),(3,"13h29"):(30,10),(3,"15h50"):(30,9),(3,"16h14"):(30,9),
- (4,"09h18"):(30,9),(4,"09h31"):(30,9),(4,"10h36"):(30,9),(4,"12h38"):(30,9),(4,"13h04"):(30,9),
- (4,"14h03"):(20,9),(4,"15h13"):(20,9),(4,"15h33"):(20,9),(4,"16h07"):(20,9),
- (5,"09h20"):(30,10),(5,"09h35"):(30,10),(5,"09h48"):(30,10),(5,"10h21"):(30,10),(5,"12h20"):(20,10),
- (5,"12h39"):(20,10),(5,"15h25"):(20,9),(5,"16h17"):(20,9),
+ (1,"14h05"):(40,10),(1,"15h20"):(30,10),(1,"15h47"):(30,9),(1,"16h19"):(30,9),
+ (2,"09h01"):(10,6),(2,"09h55"):(10,7),(2,"11h33"):(10,10),(2,"12h49"):(10,10),(2,"15h03"):(10,10),
+ (3,"09h35"):(10,7),(3,"12h22"):(10,10),(3,"13h29"):(10,10),(3,"15h50"):(10,9),(3,"16h14"):(10,9),
+ (4,"09h18"):(30,7),(4,"09h31"):(30,7),(4,"10h36"):(30,8),(4,"12h38"):(30,8),(4,"13h04"):(30,8),
+ (4,"14h03"):(30,8),(4,"15h13"):(30,9),(4,"15h33"):(30,8),(4,"16h07"):(30,8),
+ (5,"09h20"):(20,7),(5,"09h35"):(20,8),(5,"09h48"):(20,8),(5,"10h21"):(20,8),(5,"12h20"):(20,8),
+ (5,"12h39"):(20,8),(5,"15h25"):(20,8),(5,"16h17"):(20,7),
+ (6,"09h50"):(20,8),
 }
 KMH = lambda m: round(m*1.609)
 
