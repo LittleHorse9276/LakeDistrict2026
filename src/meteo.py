@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "6 nov. 2026"
+EMIS = "7 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -21,6 +21,7 @@ STATIONS = {  # clé AccuWeather, nom, slug
 }
 # Libellés AccuWeather -> (français, icône)
 TR = {
+ "Cloudy with a couple of showers":("Couvert, quelques averses","🌧️"),
  "Mostly cloudy with a little rain":("Plutôt nuageux, un peu de pluie","🌦️"),
  "Partly sunny with a couple of showers":("Éclaircies, quelques averses","🌦️"),
  "Mostly sunny with a shower in spots":("Plutôt ensoleillé, averse locale","🌦️"),
@@ -68,45 +69,45 @@ FC["EG"]={13:("Cloudy most of the time",54,43)}
 
 
 # HALF[(station, date, "m"|"a")] = (libellé, T °F, RealFeel °F, dir vent, vent mph, rafales mph, humidité %, pluie %, nuages %)
-# Relevé AccuWeather du 6 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) : Coniston J1-J2, Grasmere J3, Patterdale/Keswick J4, Keswick J5-J6 (Applethwaite seulement)
+# Relevé AccuWeather du 7 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) : Coniston J1-J2, Grasmere J3, Patterdale/Keswick J4, Keswick J5-J6 (Applethwaite seulement)
 HALF = {
- ("NB",8,"a"):('Decreasing clouds',50,52,"SE",5,9,85,25,43),
- ("CO",8,"a"):('Partly sunny',50,50,"S",5,8,86,25,63),
- ("HK",8,"a"):('Partly sunny',50,50,"S",5,8,86,25,63),
- ("SA",8,"a"):('Partly sunny',50,50,"S",5,8,86,25,63),
- ("EL",9,"m"):('Partly sunny',46,49,"ENE",5,12,90,2,40),
- ("LL",9,"m"):('Partly sunny',46,49,"ENE",5,12,90,2,40),
- ("CO",9,"m"):('Partly sunny',46,49,"ENE",5,12,90,2,40),
- ("HK",9,"a"):('Partly sunny',48,49,"NE",5,12,84,1,27),
- ("GR",10,"m"):('Mostly sunny',48,46,"ENE",7,12,81,1,15),
- ("GR",10,"a"):('Mostly cloudy with a little rain',49,47,"ENE",6,13,77,55,76),
- ("AM",10,"a"):('Mostly cloudy with a little rain',49,47,"ENE",6,13,77,55,76),
- ("AM",11,"m"):('Mostly cloudy',49,47,"NE",6,9,76,1,79),
- ("PA",11,"m"):('Mostly cloudy',49,47,"NE",6,9,76,1,79),
- ("HT",11,"m"):('Mostly cloudy',47,45,"ESE",6,10,74,1,74),
- ("HT",11,"a"):('Mostly cloudy',46,45,"ESE",6,9,66,12,80),
- ("DO",11,"a"):('Mostly sunny',46,44,"ESE",7,12,66,4,23),
- ("KE",11,"a"):('Partly sunny',48,47,"E",6,12,82,6,43),
- ("KE",12,"m"):('Mostly sunny',45,43,"ENE",6,14,79,1,47),
- ("RO",12,"m"):('Mostly sunny',45,43,"ENE",6,14,79,1,47),
- ("SE",12,"m"):('Mostly sunny',45,43,"ENE",6,14,79,1,47),
- ("BU",12,"m"):('Mostly sunny',45,43,"ENE",6,14,79,1,47),
- ("LO",12,"a"):('Mostly sunny',46,42,"NNE",8,20,59,0,0),
- ("BR",12,"a"):('Mostly sunny',46,43,"ENE",7,14,76,0,4),
- ("AP",13,"m"):('Sunny',45,45,"NE",5,10,83,1,1),
- ("WA",13,"m"):('Sunny',44,36,"NNW",12,24,62,1,0),
- ("EG",13,"a"):('Sunny',47,41,"NNW",12,24,60,0,0),
+ ("NB",8,"a"):('Partly sunny',49,51,"S",4,8,85,25,70),
+ ("CO",8,"a"):('Partly sunny',50,53,"SSW",2,5,86,25,70),
+ ("HK",8,"a"):('Partly sunny',50,53,"SSW",2,5,86,25,70),
+ ("SA",8,"a"):('Partly sunny',50,53,"SSW",2,5,86,25,70),
+ ("EL",9,"m"):('Partly sunny',46,50,"NE",4,9,93,7,51),
+ ("LL",9,"m"):('Partly sunny',46,50,"NE",4,9,93,7,51),
+ ("CO",9,"m"):('Partly sunny',46,50,"NE",4,9,93,7,51),
+ ("HK",9,"a"):('Partly sunny',48,52,"ENE",4,10,86,2,33),
+ ("GR",10,"m"):('Partly sunny',46,49,"ENE",5,12,88,0,31),
+ ("GR",10,"a"):('Partly sunny',47,50,"ENE",5,12,83,6,28),
+ ("AM",10,"a"):('Partly sunny',47,50,"ENE",5,12,83,6,28),
+ ("AM",11,"m"):('Cloudy',47,43,"NE",7,10,95,25,100),
+ ("PA",11,"m"):('Cloudy',47,43,"NE",7,10,95,25,100),
+ ("HT",11,"m"):('Cloudy with a couple of showers',46,43,"ENE",6,9,99,60,100),
+ ("HT",11,"a"):('Cloudy',45,42,"NE",6,9,100,25,100),
+ ("DO",11,"a"):('Cloudy',46,41,"E",8,9,98,25,100),
+ ("KE",11,"a"):('Cloudy with a shower in spots',50,49,"ENE",5,9,85,55,100),
+ ("KE",12,"m"):('Decreasing clouds',44,43,"ESE",5,14,88,1,100),
+ ("RO",12,"m"):('Decreasing clouds',44,43,"ESE",5,14,88,1,100),
+ ("SE",12,"m"):('Decreasing clouds',44,43,"ESE",5,14,88,1,100),
+ ("BU",12,"m"):('Decreasing clouds',44,43,"ESE",5,14,88,1,100),
+ ("LO",12,"a"):('Decreasing clouds',37,41,"E",4,12,99,0,41),
+ ("BR",12,"a"):('Decreasing clouds',45,45,"ESE",5,14,79,0,42),
+ ("AP",13,"m"):('Sunny',43,44,"NE",5,9,80,0,0),
+ ("WA",13,"m"):('Sunny',40,38,"NNE",8,16,71,0,0),
+ ("EG",13,"a"):('Sunny',47,48,"NNE",5,12,56,1,0),
 }
 # Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
 MO = {
- (1,"14h05"):(30,10),(1,"15h20"):(30,10),(1,"15h47"):(20,9),(1,"16h19"):(20,9),
- (2,"09h01"):(0,7),(2,"09h55"):(0,8),(2,"11h33"):(0,8),(2,"12h49"):(0,9),(2,"15h03"):(0,8),
- (3,"09h35"):(20,10),(3,"12h22"):(20,11),(3,"13h29"):(20,11),(3,"15h50"):(30,10),(3,"16h14"):(30,10),
- (4,"09h18"):(20,8),(4,"09h31"):(20,9),(4,"10h36"):(20,10),(4,"12h38"):(20,10),(4,"13h04"):(20,10),
- (4,"14h03"):(20,10),(4,"15h13"):(10,10),(4,"15h33"):(10,10),(4,"16h07"):(10,10),
- (5,"09h20"):(20,7),(5,"09h35"):(20,8),(5,"09h48"):(20,8),(5,"10h21"):(20,8),(5,"12h20"):(20,8),
- (5,"12h39"):(20,8),(5,"15h25"):(20,8),(5,"16h17"):(10,8),
- (6,"09h50"):(0,7),
+ (1,"14h05"):(10,8),(1,"15h20"):(10,8),(1,"15h47"):(10,8),(1,"16h19"):(10,8),
+ (2,"09h01"):(30,8),(2,"09h55"):(40,8),(2,"11h33"):(40,9),(2,"12h49"):(40,9),(2,"15h03"):(30,8),
+ (3,"09h35"):(10,9),(3,"12h22"):(20,10),(3,"13h29"):(20,11),(3,"15h50"):(30,9),(3,"16h14"):(30,9),
+ (4,"09h18"):(30,7),(4,"09h31"):(30,8),(4,"10h36"):(20,9),(4,"12h38"):(20,10),(4,"13h04"):(20,10),
+ (4,"14h03"):(20,10),(4,"15h13"):(20,10),(4,"15h33"):(20,9),(4,"16h07"):(20,9),
+ (5,"09h20"):(10,6),(5,"09h35"):(0,6),(5,"09h48"):(0,6),(5,"10h21"):(0,6),(5,"12h20"):(10,8),
+ (5,"12h39"):(10,8),(5,"15h25"):(0,7),(5,"16h17"):(0,6),
+ (6,"09h50"):(0,5),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -122,7 +123,22 @@ STOPS = [
  (6,"09h50","AP"),(6,"11h55","WA"),(6,"13h11","EG"),
 ]
 # HOURLY[(jour,"HHhMM")] = dict(txt=..., t=°C, rf=RealFeel °C, pop=%)  — à remplir à J-3
-HOURLY = {}
+HOURLY = {
+ (1,"14h05"):dict(txt='Intermittent clouds',t=9,rf=11,pop=20),
+ (1,"15h20"):dict(txt='Intermittent clouds',t=9,rf=10,pop=20),
+ (1,"15h47"):dict(txt='Intermittent clouds',t=8,rf=9,pop=20),
+ (1,"16h19"):dict(txt='Intermittent clouds',t=8,rf=9,pop=20),
+ (2,"09h01"):dict(txt='Intermittent clouds',t=3,rf=4,pop=0),
+ (2,"09h55"):dict(txt='Partly sunny',t=5,rf=7,pop=0),
+ (2,"11h33"):dict(txt='Mostly sunny',t=8,rf=10,pop=0),
+ (2,"12h49"):dict(txt='Mostly sunny',t=9,rf=11,pop=0),
+ (2,"15h03"):dict(txt='Intermittent clouds',t=8,rf=9,pop=0),
+ (3,"09h35"):dict(txt='Mostly sunny',t=5,rf=6,pop=0),
+ (3,"12h22"):dict(txt='Partly sunny',t=8,rf=9,pop=0),
+ (3,"13h29"):dict(txt='Partly sunny',t=8,rf=10,pop=0),
+ (3,"15h50"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
+ (3,"16h14"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
+}
 
 CSS = """
 /* météo */
