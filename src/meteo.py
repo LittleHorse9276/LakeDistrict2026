@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "10 nov. 2026"
+EMIS = "11 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -85,32 +85,32 @@ HALF = {
  ("GR",10,"m"):('Cloudy',44,45,"NE",4,10,91,2,99),
  ("GR",10,"a"):('Cloudy',46,47,"NE",5,13,85,25,99),
  ("AM",10,"a"):('Cloudy',46,47,"NE",5,13,85,25,99),
- ("AM",11,"m"):('Partly sunny',45,49,"NNE",5,12,92,1,41),
- ("PA",11,"m"):('Partly sunny',45,49,"NNE",5,12,92,1,41),
- ("HT",11,"m"):('Partly sunny',42,48,"NE",4,8,92,25,45),
- ("HT",11,"a"):('Partly sunny',44,48,"NW",4,9,89,3,45),
- ("DO",11,"a"):('Partly sunny',42,45,"WSW",4,9,91,3,38),
- ("KE",11,"a"):('Partly sunny',47,52,"W",2,8,82,3,42),
- ("KE",12,"m"):('Mostly sunny and cool',41,40,"WSW",6,15,80,0,22),
- ("RO",12,"m"):('Mostly sunny and cool',41,40,"WSW",6,15,80,0,22),
- ("SE",12,"m"):('Mostly sunny and cool',41,40,"WSW",6,15,80,0,22),
- ("BU",12,"m"):('Mostly sunny and cool',41,40,"WSW",6,15,80,0,22),
- ("LO",12,"a"):('Mostly sunny and cool',43,44,"NNE",5,12,70,0,0),
- ("BR",12,"a"):('Mostly sunny and cool',43,43,"SW",5,15,70,0,0),
- ("AP",13,"m"):('Sunny and cool',41,46,"E",2,8,82,5,6),
- ("WA",13,"m"):('Mostly sunny and cool',44,45,"E",6,14,75,5,14),
- ("EG",13,"a"):('Mostly sunny and cool',45,48,"S",4,12,68,13,23),
+ ("AM",11,"m"):('Partly sunny',45,47,"NNE",6,10,86,1,68),
+ ("PA",11,"m"):('Partly sunny',45,47,"NNE",6,10,86,1,68),
+ ("HT",11,"m"):('Partly sunny',42,46,"NNE",4,8,89,1,75),
+ ("HT",11,"a"):('Partly sunny',44,47,"NW",4,9,86,3,41),
+ ("DO",11,"a"):('Partly sunny',43,46,"SW",4,8,87,3,46),
+ ("KE",11,"a"):('Partly sunny',48,52,"W",2,7,80,2,46),
+ ("KE",12,"m"):('Sunny and cool',41,40,"NNW",5,16,84,0,4),
+ ("RO",12,"m"):('Sunny and cool',41,40,"NNW",5,16,84,0,4),
+ ("SE",12,"m"):('Sunny and cool',41,40,"NNW",5,16,84,0,4),
+ ("BU",12,"m"):('Sunny and cool',41,40,"NNW",5,16,84,0,4),
+ ("LO",12,"a"):('Sunny and cool',44,39,"WNW",9,15,72,0,0),
+ ("BR",12,"a"):('Sunny and cool',44,42,"NNW",6,17,69,0,0),
+ ("AP",13,"m"):('Mostly sunny',41,44,"WNW",4,10,88,5,5),
+ ("WA",13,"m"):('Sunny',45,45,"WNW",7,12,78,4,3),
+ ("EG",13,"a"):('Partly sunny with a shower in spots',46,46,"WNW",7,10,76,40,44),
 }
 # Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
 MO = {
  (1,"14h05"):(10,10),(1,"15h20"):(20,10),(1,"15h47"):(30,9),(1,"16h19"):(30,9),
  (2,"09h01"):(0,8),(2,"09h55"):(0,9),(2,"11h33"):(0,10),(2,"12h49"):(0,10),(2,"15h03"):(0,10),
  (3,"09h35"):(0,8),(3,"12h22"):(0,9),(3,"13h29"):(0,9),(3,"15h50"):(0,8),(3,"16h14"):(0,8),
- (4,"09h18"):(0,4),(4,"09h31"):(0,6),(4,"10h36"):(0,7),(4,"12h38"):(0,9),(4,"13h04"):(0,9),
- (4,"14h03"):(0,9),(4,"15h13"):(0,8),(4,"15h33"):(0,6),(4,"16h07"):(0,6),
- (5,"09h20"):(0,1),(5,"09h35"):(0,2),(5,"09h48"):(0,2),(5,"10h21"):(0,2),(5,"12h20"):(0,3),
- (5,"12h39"):(0,4),(5,"15h25"):(0,3),(5,"16h17"):(0,1),
- (6,"09h50"):(0,1),
+ (4,"09h18"):(0,4),(4,"09h31"):(0,5),(4,"10h36"):(0,7),(4,"12h38"):(0,8),(4,"13h04"):(0,8),
+ (4,"14h03"):(0,8),(4,"15h13"):(0,8),(4,"15h33"):(0,4),(4,"16h07"):(0,4),
+ (5,"09h20"):(0,1),(5,"09h35"):(0,2),(5,"09h48"):(0,2),(5,"10h21"):(0,2),(5,"12h20"):(0,5),
+ (5,"12h39"):(0,6),(5,"15h25"):(0,5),(5,"16h17"):(0,3),
+ (6,"09h50"):(40,7),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -141,26 +141,26 @@ HOURLY = {
  (3,"13h29"):dict(txt='Cloudy',t=7,rf=8,pop=7),
  (3,"15h50"):dict(txt='Cloudy',t=7,rf=6,pop=7),
  (3,"16h14"):dict(txt='Cloudy',t=7,rf=6,pop=7),
- (4,"09h18"):dict(txt='Intermittent clouds',t=3,rf=3,pop=0),
- (4,"09h31"):dict(txt='Partly sunny',t=4,rf=6,pop=0),
- (4,"10h36"):dict(txt='Partly sunny',t=5,rf=8,pop=3),
- (4,"12h38"):dict(txt='Partly sunny',t=6,rf=9,pop=0),
- (4,"13h04"):dict(txt='Partly sunny',t=6,rf=9,pop=0),
- (4,"14h03"):dict(txt='Partly sunny',t=6,rf=7,pop=0),
- (4,"15h13"):dict(txt='Partly sunny',t=7,rf=9,pop=0),
- (4,"15h33"):dict(txt='Partly sunny',t=7,rf=7,pop=0),
- (4,"16h07"):dict(txt='Partly sunny',t=7,rf=7,pop=0),
- (5,"09h20"):dict(txt='Mostly sunny',t=1,rf=1,pop=0),
+ (4,"09h18"):dict(txt='Cloudy',t=4,rf=3,pop=0),
+ (4,"09h31"):dict(txt='Intermittent clouds',t=4,rf=5,pop=0),
+ (4,"10h36"):dict(txt='Intermittent clouds',t=4,rf=7,pop=0),
+ (4,"12h38"):dict(txt='Partly sunny',t=6,rf=8,pop=0),
+ (4,"13h04"):dict(txt='Partly sunny',t=6,rf=8,pop=0),
+ (4,"14h03"):dict(txt='Partly sunny',t=6,rf=8,pop=0),
+ (4,"15h13"):dict(txt='Partly sunny',t=8,rf=9,pop=0),
+ (4,"15h33"):dict(txt='Partly sunny',t=7,rf=8,pop=0),
+ (4,"16h07"):dict(txt='Partly sunny',t=7,rf=8,pop=0),
+ (5,"09h20"):dict(txt='Sunny',t=0,rf=1,pop=0),
  (5,"09h35"):dict(txt='Sunny',t=2,rf=2,pop=0),
  (5,"09h48"):dict(txt='Sunny',t=2,rf=2,pop=0),
  (5,"10h21"):dict(txt='Sunny',t=2,rf=2,pop=0),
  (5,"12h20"):dict(txt='Sunny',t=5,rf=4,pop=0),
  (5,"12h39"):dict(txt='Sunny',t=6,rf=6,pop=0),
- (5,"15h25"):dict(txt='Sunny',t=6,rf=6,pop=0),
- (5,"16h17"):dict(txt='Sunny',t=4,rf=4,pop=0),
+ (5,"15h25"):dict(txt='Sunny',t=6,rf=4,pop=0),
+ (5,"16h17"):dict(txt='Sunny',t=5,rf=3,pop=0),
  (6,"09h50"):dict(txt='Sunny',t=2,rf=4,pop=0),
- (6,"11h55"):dict(txt='Partly sunny',t=7,rf=7,pop=0),
- (6,"13h11"):dict(txt='Mostly sunny',t=7,rf=8,pop=2),
+ (6,"11h55"):dict(txt='Sunny',t=7,rf=7,pop=1),
+ (6,"13h11"):dict(txt='Mostly sunny',t=7,rf=8,pop=14),
 }
 
 CSS = """
