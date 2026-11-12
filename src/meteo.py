@@ -100,6 +100,7 @@ HALF = {
  ("BR",12,"a"):('Sunny and cool',44,44,"NNW",6,15,68,0,0),
  ("AP",13,"m"):('Increasing cloudiness',42,45,"W",4,10,89,5,9),
  ("WA",13,"m"):('Increasing cloudiness',45,46,"S",6,10,80,4,9),
+ ("EG",13,"m"):('Increasing cloudiness',44,45,"SW",6,10,82,4,6),
  ("EG",13,"a"):('Increasing cloudiness',47,46,"W",7,13,79,25,78),
 }
 # Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
@@ -111,7 +112,7 @@ MO = {
  (4,"14h03"):(0,8),(4,"15h13"):(0,8),(4,"15h33"):(0,4),(4,"16h07"):(0,4),
  (5,"09h41"):(0,2),(5,"09h56"):(0,2),(5,"10h09"):(0,2),(5,"10h34"):(0,4),(5,"12h51"):(0,6),
  (5,"13h12"):(0,6),(5,"15h46"):(0,2),
- (6,"09h50"):(20,6),
+ (6,"09h20"):(20,5),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -124,7 +125,7 @@ STOPS = [
  (4,"09h18","AM"),(4,"09h31","PA"),(4,"10h36","HT"),(4,"12h38","HT"),(4,"13h04","HT"),(4,"14h03","DO"),(4,"15h13","KE"),(4,"15h33","KE"),(4,"16h07","KE"),
  (5,"09h41","KE"),(5,"09h56","KE"),(5,"10h09","KE"),(5,"10h34","RO"),(5,"12h51","SE"),
  (5,"13h12","BU"),(5,"15h46","LO"),
- (6,"09h50","AP"),(6,"11h55","WA"),(6,"13h11","EG"),
+ (6,"09h20","AP"),(6,"11h25","WA"),(6,"12h41","EG"),
 ]
 # HOURLY[(jour,"HHhMM")] = dict(txt=..., t=°C, rf=RealFeel °C, pop=%)  — à remplir à J-3
 HOURLY = {
@@ -158,9 +159,9 @@ HOURLY = {
  (5,"12h51"):dict(txt='Sunny',t=6,rf=6,pop=0),
  (5,"13h12"):dict(txt='Sunny',t=6,rf=6,pop=0),
  (5,"15h46"):dict(txt='Sunny',t=4,rf=1,pop=0),
- (6,"09h50"):dict(txt='Sunny',t=2,rf=4,pop=0),
- (6,"11h55"):dict(txt='Mostly sunny',t=7,rf=8,pop=1),
- (6,"13h11"):dict(txt='Partly sunny',t=7,rf=8,pop=7),
+ (6,"09h20"):dict(txt='Sunny',t=1,rf=2,pop=0),
+ (6,"11h25"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
+ (6,"12h41"):dict(txt='Partly sunny',t=7,rf=8,pop=7),
 }
 
 CSS = """
