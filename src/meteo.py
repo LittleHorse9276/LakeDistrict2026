@@ -125,7 +125,7 @@ STOPS = [
  (4,"09h18","AM"),(4,"09h31","PA"),(4,"10h36","HT"),(4,"12h38","HT"),(4,"13h04","HT"),(4,"14h03","DO"),(4,"15h13","KE"),(4,"15h33","KE"),(4,"16h07","KE"),
  (5,"09h41","KE"),(5,"09h56","KE"),(5,"10h09","KE"),(5,"10h34","RO"),(5,"12h51","SE"),
  (5,"13h12","BU"),(5,"15h46","LO"),
- (6,"09h18","AP"),(6,"11h26","WA"),(6,"12h34","EG"),
+ (6,"09h18","AP"),(6,"11h41","WA"),(6,"12h49","EG"),
 ]
 # HOURLY[(jour,"HHhMM")] = dict(txt=..., t=°C, rf=RealFeel °C, pop=%)  — à remplir à J-3
 HOURLY = {
@@ -160,8 +160,8 @@ HOURLY = {
  (5,"13h12"):dict(txt='Sunny',t=6,rf=6,pop=0),
  (5,"15h46"):dict(txt='Sunny',t=4,rf=1,pop=0),
  (6,"09h18"):dict(txt='Sunny',t=1,rf=2,pop=0),
- (6,"11h26"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
- (6,"12h34"):dict(txt='Partly sunny',t=7,rf=8,pop=7),
+ (6,"11h41"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
+ (6,"12h49"):dict(txt='Partly sunny',t=7,rf=8,pop=7),
 }
 
 CSS = """
