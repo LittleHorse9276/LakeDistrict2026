@@ -4,7 +4,7 @@
 # (prévision à l'heure de passage, à remplir à J-3), puis relancer.
 import re, sys, json, html as H
 
-EMIS = "12 nov. 2026"
+EMIS = "13 nov. 2026"
 BASE = "https://www.accuweather.com/en/gb/{slug}/november-weather/{key}"
 
 STATIONS = {  # clé AccuWeather, nom, slug
@@ -98,10 +98,10 @@ HALF = {
  ("BU",12,"a"):('Sunny and cool',44,44,"NNW",6,15,68,0,0),
  ("LO",12,"a"):('Sunny and cool',44,41,"N",8,14,72,0,0),
  ("BR",12,"a"):('Sunny and cool',44,44,"NNW",6,15,68,0,0),
- ("AP",13,"m"):('Increasing cloudiness',42,45,"W",4,10,89,5,9),
- ("WA",13,"m"):('Increasing cloudiness',45,46,"S",6,10,80,4,9),
- ("EG",13,"m"):('Increasing cloudiness',44,45,"SW",6,10,82,4,6),
- ("EG",13,"a"):('Increasing cloudiness',47,46,"W",7,13,79,25,78),
+ ("AP",13,"m"):('Increasing cloudiness',43,45,"W",4,12,82,10,23),
+ ("WA",13,"m"):('Increasing cloudiness',45,43,"NNW",8,13,85,12,37),
+ ("EG",13,"m"):('Increasing cloudiness',45,43,"NNW",7,13,84,12,34),
+ ("EG",13,"a"):('Mostly cloudy with a shower in spots',47,43,"WNW",8,14,77,55,91),
 }
 # Relevé AccuWeather du 3 nov. 2026. Croisement Met Office (pluie %, T °C à l'heure la plus proche ; 0 = <5 %) pour les jours couverts (jusqu'au 12 nov.)
 MO = {
@@ -112,7 +112,7 @@ MO = {
  (4,"14h03"):(0,8),(4,"15h13"):(0,8),(4,"15h33"):(0,4),(4,"16h07"):(0,4),
  (5,"09h41"):(0,2),(5,"09h56"):(0,2),(5,"10h09"):(0,2),(5,"10h34"):(0,4),(5,"12h51"):(0,6),
  (5,"13h12"):(0,6),(5,"15h46"):(0,2),
- (6,"09h18"):(20,5),
+ (6,"09h18"):(0,1),(6,"11h37"):(40,6),(6,"12h46"):(70,7),
 }
 KMH = lambda m: round(m*1.609)
 
@@ -159,9 +159,9 @@ HOURLY = {
  (5,"12h51"):dict(txt='Sunny',t=6,rf=6,pop=0),
  (5,"13h12"):dict(txt='Sunny',t=6,rf=6,pop=0),
  (5,"15h46"):dict(txt='Sunny',t=4,rf=1,pop=0),
- (6,"09h18"):dict(txt='Sunny',t=1,rf=2,pop=0),
- (6,"11h37"):dict(txt='Mostly sunny',t=7,rf=7,pop=0),
- (6,"12h46"):dict(txt='Partly sunny',t=7,rf=8,pop=7),
+ (6,"09h18"):dict(txt='Mostly sunny',t=2,rf=3,pop=1),
+ (6,"11h37"):dict(txt='Mostly cloudy',t=7,rf=6,pop=4),
+ (6,"12h46"):dict(txt='Mostly cloudy',t=8,rf=6,pop=12),
 }
 
 CSS = """
